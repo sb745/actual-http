@@ -25,6 +25,7 @@ class TransactionRequest(BaseModel):
     amount: float
     notes: str
     outcome: bool = True
+    cleared: bool = True
 
 
 def verify_api_key(x_api_key: str = Header(...)):
@@ -52,6 +53,7 @@ def add_transaction(transaction: TransactionRequest):
             transaction.payee,
             notes=transaction.notes,
             amount=amount,
+            cleared=transaction.cleared,
         )
         actual.commit()  # use the actual.commit() instead of session.commit()!
         try:

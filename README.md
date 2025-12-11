@@ -28,7 +28,7 @@ docker compose up --build --detach
 ```
 
 ### Local install
-> [!INFO]  
+> [!NOTE]  
 > Untested by me but it should probably work.
 ```bash
 pip install -r requirements.txt

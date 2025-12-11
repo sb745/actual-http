@@ -1,84 +1,81 @@
-# 🧾 Actual Budget API Wrapper
+# Actual Budget HTTP Wrapper
 
-![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-API-green)
+[![python](https://img.shields.io/badge/Python-3.13-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org) ![Maintenance](https://img.shields.io/maintenance/yes/2025)
 
-A simple FastAPI-based wrapper that allows you to interact with [Actual Budget](https://actualbudget.org/) — a powerful local-first budgeting tool — via a minimal HTTP API.
+A simple FastAPI-based wrapper that allows you to interact with [Actual Budget](https://actualbudget.org/) via a minimal HTTP API, forked from [actual-api-rest](https://github.com/tmllull/actual-api-rest). Uses the [actualpy](https://github.com/bvanelli/actualpy) module under the hood.
 
-Since Actual Budget does not provide an official REST API, this project serves as a thin layer to enable **automated creation of transactions**, using the [actualpy](https://github.com/bvanelli/actualpy) module under the hood.
+## Fork changes
 
-⚠️ NOTE: this project is very simple, but it's in very early development.
+- Can now get budget and accounts info
+- Requests instance password and filename instead of storing them in environment variables
+- Removed useless API key verification
+- More under the hood changes
 
-## ✨ Features
+## Setup
 
-- 🔐 Secured with API Key authentication
-- 🔁 Add new transactions via a single HTTP endpoint
-- ⚙️ Docker-ready deployment
-- 🧩 Easy integration with your automation scripts or external services
-
-## 🛠️ Setup
-
-Create a `.env` file with the following variables:
+Create a `.env` file with the following variable:
 
 ```env
-API_KEY=your_super_secret_key
-ACTUAL_HOST=http://actual-host:5006
-ACTUAL_PASSWORD=your_password
-ACTUAL_FILE=your_budget_name
+ACTUAL_HOST="https://your-actual-budget-host.com"
 ```
 
-- `API_KEY`: Key required to authorize API requests.
-- `ACTUAL_HOST`: URL to your Actual Budget instance.
-- `ACTUAL_PASSWORD`: Password for the Actual Budget.
-- `ACTUAL_FILE`: Budget file name to use.
+## Usage
 
-## 🚀 Usage
-
-### 🐳 Using Docker (recommended)
+### Using Docker
 
 ```bash
-docker compose up --build
+docker compose up --build --detach
 ```
 
-### 🧪 Local install (Python 3.10+)
-
+### Local install
+> [!INFO]  
+> Untested by me but it should probably work.
 ```bash
 pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-## 🧠 API Reference
-
-### `POST /transaction`
-
-Adds a new transaction to your Actual Budget file.
+## API Reference
 
 **Headers:**
 
 ```
-x-api-key: your_super_secret_key
 Content-Type: application/json
+x-actual-password: your_actual_password
+x-actual-encryption-password: encryption_password_if_present
+x-actual-file: file_name_or_id
 ```
 
-**Request body:**
+### `POST /transaction/add`
+
+Adds a new transaction.
+
+**Body:**
 
 ```json
 {
   "amount": 12.99,
   "payee": "Spotify",
-  "account": "checking",
+  "account": "Bank",
+  "category": "Subscriptions",
   "notes": "Monthly plan",
-  "outcome": true
+  "payment": true,
+  "cleared": true
 }
 ```
 
-## 📦 Dependencies
+### `GET /budget/{year}/{month}`
 
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [actualpy](https://github.com/bvanelli/actualpy)
-- [python-dotenv](https://pypi.org/project/python-dotenv/)
+Gets the specified month's budget in JSON format.
 
-## 📄 License
+### `GET /budget/current`
 
-This project is licensed under the MIT License.
+Gets the current month's budget in JSON format.
+
+### `GET /accounts/balances`
+
+Gets the current account balances in JSON format.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

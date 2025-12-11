@@ -1,14 +1,15 @@
 services:
-  actual-api-rest:
+  actual-http:
     build: .
-    container_name: actual-api-rest
+    container_name: actual-http
+    #network: host
     ports:
-      - "5007:8000"
+      - "5007:5007"
     env_file:
       - .env
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5007/health"]
-      interval: 30s
+      interval: 60s
       timeout: 10s
       retries: 3

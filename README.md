@@ -76,6 +76,10 @@ Gets the current month's budget in JSON format.
 
 Gets the current account balances in JSON format.
 
+### `GET /health`
+
+Check API health.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
